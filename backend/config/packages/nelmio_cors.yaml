@@ -1,11 +1,7 @@
-
 nelmio_cors:
-    paths:
-        '^/': ~
     defaults:
-        allow_credentials: true
-        allow_origin: ['http://localhost:5173']  # Aggiungi il dominio del frontend React
+        allow_credentials: false
+        allow_origin: ['*']
         allow_headers: ['Content-Type', 'Authorization']
-        allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'DELETE']
-        expose_headers: ['Link']
+        allow_methods: ['GET', 'OPTIONS']  # Aggiungi altri metodi se necessario
         max_age: 3600
