@@ -5,68 +5,61 @@ namespace App\Entity;
 use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
-#[ORM\Table('movies')]
+#[ORM\Table(name: 'movies')]
 class Movie
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    #[Groups(['default'])]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    #[Groups(['default'])]
+    #[ORM\Column(type: 'string', length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
-    #[Groups(['default'])]
+    #[ORM\Column(type: 'string', length: 255)]
     private ?string $imageUrl = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['default'])]
+    #[ORM\Column(type: 'text')]
     private ?string $plot = null;
 
-    #[ORM\Column]
-    #[Groups(['default'])]
+    #[ORM\Column(type: 'integer')]
     private ?int $year = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['default'])]
+    #[ORM\Column(type: 'date')]
     private ?\DateTimeInterface $releaseDate = null;
 
-    #[ORM\Column(length: 255)]
-    #[Groups(['default'])]
+    #[ORM\Column(type: 'string', length: 255)]
     private ?string $duration = null;
 
-    #[ORM\Column]
-    #[Groups(['default'])]
+    #[ORM\Column(type: 'integer')]
     private ?int $rating = null;
 
-    #[ORM\Column(length: 255)]
-    #[Groups(['default'])]
+    #[ORM\Column(type: 'string', length: 255)]
     private ?string $wikipediaUrl = null;
 
     /**
      * @var Collection<int, MovieGenre>
      */
     #[ORM\OneToMany(targetEntity: MovieGenre::class, mappedBy: 'movie')]
+    #[Assert\Valid()]
     private Collection $movieGenres;
 
     /**
      * @var Collection<int, MovieActor>
      */
     #[ORM\OneToMany(targetEntity: MovieActor::class, mappedBy: 'movie')]
+    #[Assert\Valid()]
     private Collection $movieActors;
 
     /**
      * @var Collection<int, MovieKeyword>
      */
     #[ORM\OneToMany(targetEntity: MovieKeyword::class, mappedBy: 'movie')]
+    #[Assert\Valid()]
     private Collection $movieKeywords;
 
     public function __construct()
@@ -86,7 +79,7 @@ class Movie
         return $this->title;
     }
 
-    public function setTitle(string $title): static
+    public function setTitle(string $title): self
     {
         $this->title = $title;
 
@@ -98,7 +91,7 @@ class Movie
         return $this->imageUrl;
     }
 
-    public function setImageUrl(string $imageUrl): static
+    public function setImageUrl(string $imageUrl): self
     {
         $this->imageUrl = $imageUrl;
 
@@ -110,7 +103,7 @@ class Movie
         return $this->plot;
     }
 
-    public function setPlot(string $plot): static
+    public function setPlot(string $plot): self
     {
         $this->plot = $plot;
 
@@ -122,7 +115,7 @@ class Movie
         return $this->year;
     }
 
-    public function setYear(int $year): static
+    public function setYear(int $year): self
     {
         $this->year = $year;
 
@@ -134,7 +127,7 @@ class Movie
         return $this->releaseDate;
     }
 
-    public function setReleaseDate(\DateTimeInterface $releaseDate): static
+    public function setReleaseDate(\DateTimeInterface $releaseDate): self
     {
         $this->releaseDate = $releaseDate;
 
@@ -146,7 +139,7 @@ class Movie
         return $this->duration;
     }
 
-    public function setDuration(string $duration): static
+    public function setDuration(string $duration): self
     {
         $this->duration = $duration;
 
@@ -158,7 +151,7 @@ class Movie
         return $this->rating;
     }
 
-    public function setRating(int $rating): static
+    public function setRating(int $rating): self
     {
         $this->rating = $rating;
 
@@ -170,7 +163,7 @@ class Movie
         return $this->wikipediaUrl;
     }
 
-    public function setWikipediaUrl(string $wikipediaUrl): static
+    public function setWikipediaUrl(string $wikipediaUrl): self
     {
         $this->wikipediaUrl = $wikipediaUrl;
 
@@ -185,7 +178,7 @@ class Movie
         return $this->movieGenres;
     }
 
-    public function addMovieGenre(MovieGenre $movieGenre): static
+    public function addMovieGenre(MovieGenre $movieGenre): self
     {
         if (!$this->movieGenres->contains($movieGenre)) {
             $this->movieGenres->add($movieGenre);
@@ -195,7 +188,7 @@ class Movie
         return $this;
     }
 
-    public function removeMovieGenre(MovieGenre $movieGenre): static
+    public function removeMovieGenre(MovieGenre $movieGenre): self
     {
         if ($this->movieGenres->removeElement($movieGenre)) {
             // set the owning side to null (unless already changed)
@@ -215,7 +208,7 @@ class Movie
         return $this->movieActors;
     }
 
-    public function addMovieActor(MovieActor $movieActor): static
+    public function addMovieActor(MovieActor $movieActor): self
     {
         if (!$this->movieActors->contains($movieActor)) {
             $this->movieActors->add($movieActor);
@@ -225,7 +218,7 @@ class Movie
         return $this;
     }
 
-    public function removeMovieActor(MovieActor $movieActor): static
+    public function removeMovieActor(MovieActor $movieActor): self
     {
         if ($this->movieActors->removeElement($movieActor)) {
             // set the owning side to null (unless already changed)
@@ -245,7 +238,7 @@ class Movie
         return $this->movieKeywords;
     }
 
-    public function addMovieKeyword(MovieKeyword $movieKeyword): static
+    public function addMovieKeyword(MovieKeyword $movieKeyword): self
     {
         if (!$this->movieKeywords->contains($movieKeyword)) {
             $this->movieKeywords->add($movieKeyword);
@@ -255,7 +248,7 @@ class Movie
         return $this;
     }
 
-    public function removeMovieKeyword(MovieKeyword $movieKeyword): static
+    public function removeMovieKeyword(MovieKeyword $movieKeyword): self
     {
         if ($this->movieKeywords->removeElement($movieKeyword)) {
             // set the owning side to null (unless already changed)

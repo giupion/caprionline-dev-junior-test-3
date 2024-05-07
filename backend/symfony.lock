@@ -38,6 +38,15 @@
             "config/packages/nelmio_cors.yaml"
         ]
     },
+    "symfony/clickatell-notifier": {
+        "version": "7.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.3",
+            "ref": "d7af4bfd56de0e478974b65500311a1d9b06fe2c"
+        }
+    },
     "symfony/console": {
         "version": "7.0",
         "recipe": {
@@ -89,6 +98,18 @@
             "version": "1.0",
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
+    },
+    "symfony/notifier": {
+        "version": "7.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.0",
+            "ref": "178877daf79d2dbd62129dd03612cb1a2cb407cc"
+        },
+        "files": [
+            "./config/packages/notifier.yaml"
+        ]
     },
     "symfony/routing": {
         "version": "7.0",

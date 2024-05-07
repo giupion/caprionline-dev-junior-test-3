@@ -1,13 +1,21 @@
+version: '3.7'
+
+networks:
+  capri-network:
+    driver: bridge
+
 services:
   php:
-    build: infra/docker/php-8.3
+    build: infra/docker/php-8.2.18
     ports:
-      - 8000:8000
+      - "8000:8000"  # Mappa la porta 8000 del container sulla porta 8000 dell'host
     volumes:
       - .:/app
     entrypoint: tail -f /dev/null
     environment:
       - DATABASE_URL=mysql://root:mysql@mysql:3306/TheMovieDB?charset=utf8mb4&serverVersion=8.0.31
+    networks:
+      - capri-network
 
   mysql:
     image: 'mysql:8.0.35'
@@ -20,15 +28,17 @@ services:
       - MYSQL_DATABASE=TheMovieDB
       - MYSQL_USER=mysql
       - MYSQL_PASSWORD=mysql
+    networks:
+      - capri-network
 
   phpmyadmin:
     image: phpmyadmin
     restart: always
-    links:
-      - mysql
     ports:
-      - 8080:80
+      - "8080:80"  # Mappa la porta 80 del container sulla porta 8080 dell'host
     environment:
       - PMA_HOST=mysql
       - PMA_USER=root
       - PMA_PASSWORD=mysql
+    networks:
+      - capri-network
