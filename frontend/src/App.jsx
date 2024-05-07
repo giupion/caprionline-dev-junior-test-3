@@ -1,14 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Rating, Spinner } from 'flowbite-react';
+import PropTypes from 'prop-types';
 
-const App = props => {
+const App = () => {
   const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [sortBy, setSortBy] = useState('recent');
+  const [genreFilter, setGenreFilter] = useState('');
 
   const fetchMovies = () => {
     setLoading(true);
 
-    return fetch('http://localhost:8000/movies')
+    let url = 'http://localhost:8000/movies';
+    if (sortBy === 'rating') {
+      url += '?sortBy=rating';
+    }
+    if (genreFilter) {
+      url += `${sortBy === 'rating' ? '&' : '?'}genre=${genreFilter}`;
+    }
+
+    return fetch(url)
       .then(response => response.json())
       .then(data => {
         setMovies(data);
@@ -18,11 +29,26 @@ const App = props => {
 
   useEffect(() => {
     fetchMovies();
-  }, []);
+  }, [sortBy, genreFilter]);
 
   return (
     <Layout>
       <Heading />
+
+      <div className="flex justify-center my-4 space-x-4">
+        <label>Sort By:</label>
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="recent">Most Recent</option>
+          <option value="rating">Rating</option>
+        </select>
+        <label>Filter By Genre:</label>
+        <select value={genreFilter} onChange={(e) => setGenreFilter(e.target.value)}>
+          <option value="">All Genres</option>
+          <option value="action">Action</option>
+          <option value="comedy">Comedy</option>
+          {/* Add more genres */}
+        </select>
+      </div>
 
       <MovieList loading={loading}>
         {movies.map((item, key) => (
@@ -33,17 +59,34 @@ const App = props => {
   );
 };
 
-const Layout = props => {
+App.propTypes = {
+  movies: PropTypes.arrayOf(PropTypes.shape({
+    imageUrl: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    plot: PropTypes.string.isRequired,
+    year: PropTypes.number,
+    rating: PropTypes.number,
+    wikipediaUrl: PropTypes.string,
+  })),
+  loading: PropTypes.bool.isRequired,
+  
+};
+
+const Layout = ({ children }) => {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
-        {props.children}
+        {children}
       </div>
     </section>
   );
 };
 
-const Heading = props => {
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+const Heading = () => {
   return (
     <div className="mx-auto max-w-screen-sm text-center mb-8 lg:mb-16">
       <h1 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
@@ -57,8 +100,8 @@ const Heading = props => {
   );
 };
 
-const MovieList = props => {
-  if (props.loading) {
+const MovieList = ({ loading, children }) => {
+  if (loading) {
     return (
       <div className="text-center">
         <Spinner size="xl" />
@@ -68,12 +111,17 @@ const MovieList = props => {
 
   return (
     <div className="grid gap-4 md:gap-y-8 xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3">
-      {props.children}
+      {children}
     </div>
   );
 };
 
-const MovieItem = props => {
+MovieList.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  children: PropTypes.node.isRequired,
+};
+
+const MovieItem = (props) => {
   return (
     <div className="flex flex-col w-full h-full rounded-lg shadow-md lg:max-w-sm">
       <div className="grow">
@@ -89,19 +137,19 @@ const MovieItem = props => {
         <div className="grow mb-3 last:mb-0">
           {props.year || props.rating
             ? <div className="flex justify-between align-middle text-gray-900 text-xs font-medium mb-2">
-                <span>{props.year}</span>
+              <span>{props.year}</span>
 
-                {props.rating
-                  ? <Rating>
-                      <Rating.Star />
+              {props.rating
+                ? <Rating>
+                  <Rating.Star />
 
-                      <span className="ml-0.5">
-                        {props.rating}
-                      </span>
-                    </Rating>
-                  : null
-                }
-              </div>
+                  <span className="ml-0.5">
+                    {props.rating}
+                  </span>
+                </Rating>
+                : null
+              }
+            </div>
             : null
           }
 
@@ -116,18 +164,27 @@ const MovieItem = props => {
 
         {props.wikipediaUrl
           ? <Button
-              color="light"
-              size="xs"
-              className="w-full"
-              onClick={() => window.open(props.wikipediaUrl, '_blank')}
-            >
-              More
-            </Button>
+            color="light"
+            size="xs"
+            className="w-full"
+            onClick={() => window.open(props.wikipediaUrl, '_blank')}
+          >
+            More
+          </Button>
           : null
         }
       </div>
     </div>
   );
+};
+
+MovieItem.propTypes = {
+  imageUrl: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  plot: PropTypes.string.isRequired,
+  year: PropTypes.number,
+  rating: PropTypes.number,
+  wikipediaUrl: PropTypes.string,
 };
 
 export default App;
