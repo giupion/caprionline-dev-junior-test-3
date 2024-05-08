@@ -17,28 +17,28 @@ class Movie
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(name: 'title', type: 'string', length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(name: 'image_url', type: 'string', length: 255)]
     private ?string $imageUrl = null;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(name: 'plot', type: 'text')]
     private ?string $plot = null;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(name: 'year', type: 'integer')]
     private ?int $year = null;
 
-    #[ORM\Column(type: 'date')]
+    #[ORM\Column(name: 'release_date', type: 'date')]
     private ?\DateTimeInterface $releaseDate = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(name: 'duration', type: 'string', length: 255)]
     private ?string $duration = null;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(name: 'rating', type: 'integer')]
     private ?int $rating = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(name: 'wikipedia_url', type: 'string', length: 255)]
     private ?string $wikipediaUrl = null;
 
     /**

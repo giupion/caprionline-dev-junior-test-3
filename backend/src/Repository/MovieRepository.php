@@ -6,6 +6,14 @@ use App\Entity\Movie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<Movie>
+ *
+ * @method Movie|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Movie|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Movie[]    findAll()
+ * @method Movie[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
 class MovieRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -13,33 +21,28 @@ class MovieRepository extends ServiceEntityRepository
         parent::__construct($registry, Movie::class);
     }
 
-    /**
-     * Get movies ordered by specified criteria and filtered by genre.
-     * 
-     * @param string $sortBy The criteria to sort movies by (e.g., "recent", "rating").
-     * @param string|null $genre The genre to filter movies by.
-     * @return Movie[] The array of Movie objects.
-     */
-    public function findMoviesOrderedBy(string $sortBy, ?string $genre = null): array
-    {
-        $qb = $this->createQueryBuilder('m');
+    //    /**
+    //     * @return Movie[] Returns an array of Movie objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('m')
+    //            ->andWhere('m.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('m.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-        switch ($sortBy) {
-            case 'recent':
-                $qb->orderBy('m.releaseDate', 'DESC');
-                break;
-            case 'rating':
-                $qb->orderBy('m.rating', 'DESC');
-                break;
-            default:
-                throw new \InvalidArgumentException("Invalid sorting criteria: $sortBy");
-        }
-
-        if ($genre) {
-            $qb->andWhere('m.genre = :genre')
-               ->setParameter('genre', $genre);
-        }
-
-        return $qb->getQuery()->getResult();
-    }
+    //    public function findOneBySomeField($value): ?Movie
+    //    {
+    //        return $this->createQueryBuilder('m')
+    //            ->andWhere('m.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

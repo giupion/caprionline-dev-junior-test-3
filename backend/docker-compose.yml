@@ -1,26 +1,15 @@
-# docker-compose.yml
-
-version: '3.7'
-
-networks:
-  capri-network:
-    driver: bridge
-
 services:
   php:
-    # Configurazione per il container Symfony/PHP
-    build: infra/docker/php-8.2.18
+    build: infra/docker/php-8.3
     ports:
-      - "8000:8000"
+      - 8000:8000
     volumes:
       - .:/app
-    depends_on:
-      - mysql
-    networks:
-      - capri-network
+    entrypoint: tail -f /dev/null
+    environment:
+      - DATABASE_URL=mysql://root:mysql@mysql:3306/TheMovieDB?charset=utf8mb4&serverVersion=8.0.31
 
   mysql:
-    # Configurazione per il container MySQL
     image: 'mysql:8.0.35'
     restart: always
     volumes:
@@ -31,18 +20,15 @@ services:
       - MYSQL_DATABASE=TheMovieDB
       - MYSQL_USER=mysql
       - MYSQL_PASSWORD=mysql
-    networks:
-      - capri-network
 
-  nginx:
-    # Configurazione per il container NGINX
-    image: nginx:latest
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - php
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    links:
       - mysql
-    networks:
-      - capri-network
+    ports:
+      - 8080:80
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=mysql
